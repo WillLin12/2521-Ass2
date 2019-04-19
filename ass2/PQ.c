@@ -115,7 +115,7 @@ void addPQ(PQ pq, ItemPQ element) {
 			} else {
 				ItemNode *newNode = makeItemNode(element);
 				newNode->next = NULL;
-				currP->next = newNode;
+				pq->last->next = newNode;
 				pq->nItems++;
 				pq->last = newNode;
 			}
