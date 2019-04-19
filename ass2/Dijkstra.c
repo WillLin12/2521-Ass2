@@ -7,8 +7,15 @@
 
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
-	ShortestPaths throwAway = {0};
-	return throwAway;
+	ShortestPaths new = malloc(sizeof(ShortestPaths));
+	new.src = v;
+	new.noNodes = Graph->nV;
+	new.dist[] = {9999999};
+	new.dist[new.src] = 0;
+	new.pred = malloc(new.noNodes*sizeof(PredNode));
+	new.pred[] = {-1};
+
+	return new;
 }
 
 void showShortestPaths(ShortestPaths paths) {
@@ -19,3 +26,4 @@ void showShortestPaths(ShortestPaths paths) {
 void  freeShortestPaths(ShortestPaths paths) {
 
 }
+
