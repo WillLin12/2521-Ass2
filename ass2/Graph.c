@@ -11,10 +11,10 @@ struct GraphRep {
 };
 
 static AdjList newAdjListNode(Vertex v, int weight);
-//static AdjList newLList(void);
 static void showLL(adjListNode *L);
 static void freeLL(adjListNode *L);
 static bool inLL(adjListNode *L, Vertex n);
+static AdjList deleteLL(adjListNode *L, int n);
 
 Graph newGraph(int noNodes) {
     assert(noNodes != 0);
@@ -56,35 +56,14 @@ void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
     assert(g != NULL);
 
-    AdjList currPointer = g->edges[src];
-    if (currPointer->w == dest) { //case if first node 
-        free(currPointer);
-    } else {
-        AdjList prevPointer = g->edges[src]; 
-        while (currPointer->w != dest) {
-            prevPointer = currPointer;
-            currPointer = currPointer->next;
-        }
-        if (currPointer->next != NULL) {
-            prevPointer->next = currPointer->next;
-        } else {
-            prevPointer->next = NULL;
-        }
-        free(currPointer);
-    }
+	if (inLL(g->edges[src], dest)) {   // edge e in graph
+      g->edges[src] = deleteLL(g->edges[src], dest);
+      g->nE--;
+   }
 }
 
 bool adjacent(Graph g, Vertex src, Vertex dest) {
     assert(g != NULL);
-    /*AdjList currPointer = g->edges[src];
-    while (currPointer != NULL) {
-        if (currPointer->w) {
-            return true;
-        }
-        currPointer = currPointer->next;
-    }
-        
-    return false;*/
     return inLL(g->edges[src], dest);
 }
 
@@ -103,8 +82,6 @@ AdjList outIncident(Graph g, Vertex v) {
 AdjList inIncident(Graph g, Vertex v) {
     assert(g != NULL);
 
-    //AdjList headP = NULL;
-    if (v == 0) {return NULL;}
     AdjList n = NULL;
     int i = 0;
     while (i < g->nV) {
@@ -118,31 +95,6 @@ AdjList inIncident(Graph g, Vertex v) {
         i ++;
     }
     return n; 
-    
-    /*AdjList headP = NULL;
-    AdjList currP = g->edges[0];
-	AdjList listP = NULL;
-
-    int i = 0;
-    while (i < g->nV) {
-        currP = g->edges[i];
-        while (currP != NULL) {
-            if (currP->w == v) {
-                AdjList newNode = newAdjListNode(v, currP->weight);  
-                if (headP == NULL) {
-                    headP = newNode;
-                    listP = newNode;
-                } else {
-                    listP->next = newNode;
-                }
-            }
-            currP = currP->next;
-        }
-        i++;
-    }
-    free(currP);
-    return headP;
-    */
 }
 
 void  showGraph(Graph g) {
@@ -175,15 +127,7 @@ static AdjList newAdjListNode(Vertex v, int weight) {
     n->next = NULL;
     return n;
 }
-/*
-static AdjList newLList(void) {
-    AdjList n = malloc(sizeof (AdjList));
-    n->w = 0;
-    n->weight = 0;
-    n->next = NULL;
-    return n;
-}
-*/
+
 static void showLL(adjListNode *L) {
    if (L == NULL)
       putchar('\n');
@@ -209,3 +153,13 @@ static bool inLL(adjListNode *L, Vertex n) {
    return inLL(L->next, n);
 }
 
+static AdjList deleteLL(adjListNode *L, int n) {
+   if (L == NULL)
+      return L;
+   if (L->w == n)
+      return L->next;
+
+   L->next = deleteLL(L->next, n);
+   return L;
+
+}
