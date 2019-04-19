@@ -24,7 +24,7 @@ static List makeLList () {
 
 
 
-
+/*
 
 
 static typedef struct ItemNode {
@@ -148,3 +148,38 @@ void  showPQ(PQ pq) {
 void  freePQ(PQ pq) {
 
 }
+*/
+struct PQRep {
+
+};
+
+
+PQ newPQ() {
+	return NULL;
+}
+
+int PQEmpty(PQ p) {
+		return 0;
+}
+
+void addPQ(PQ pq, ItemPQ element) {
+
+}
+
+ItemPQ dequeuePQ(PQ pq) {
+	ItemPQ throwAway = {0};
+	return throwAway;
+}
+
+void updatePQ(PQ pq, ItemPQ element) {
+
+}
+
+void  showPQ(PQ pq) {
+
+}
+
+void  freePQ(PQ pq) {
+
+}
+
