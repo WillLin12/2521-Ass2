@@ -24,22 +24,17 @@ static List makeLList () {
 
 
 
+typedef struct ItemNode ItemNode;
+typedef struct ItemNode *ItemNodePointer;
 
-
-
-static typedef struct ItemNode {
+static struct ItemNode {
 	ItemPQ *Item;
-	ItemNode *next;
-} ItemNode;
-
-static ItemNode *makeItemNode (ItemPQ item) {
-	ItemNode *myItem = malloc(sizeof (ItemNode));
-	myItem->Item = item;
-	myItem->next = NULL;
-	return myItem;
+	struct ItemNode *next;
 }
 
-typedef ItemNode *ItemNodePointer;
+//typedef struct ItemNode ItemNode;
+//typedef struct ItemNode *ItemNodePointer;
+
 
 typedef struct PQRep {
 	int nItems;
@@ -49,6 +44,7 @@ typedef struct PQRep {
 	ItemNodePointer last; //smallest
 } PQRep;
 
+static ItemNode *makeItemNode (ItemPQ item);
 
 PQ newPQ() {
 	PQ myPQ = malloc(sizeof (PQRep));
@@ -68,9 +64,9 @@ PQ newPQ() {
 }
 
 int PQEmpty(PQ p) {
-	if (p->nitems = 0) {
+	if (p->nItems == 0) {
 		return 1;
-	else {
+	} else {
 		return 0;
 	}
 }
@@ -82,16 +78,16 @@ void addPQ(PQ pq, ItemPQ element) {
 		pq->first = newNode;
 		pq->last = newNode;
 		pq->nItems++;
-		break;
+		
 	} else {
 		ItemNodePointer currP = pq->first;
 		ItemNodePointer prevP = pq->first;
 		if (element.key <= currP->Item->key) { //key is less than first item's key
 			ItemNode *newNode = makeItemNode(element);
-			newnode->next = currP;
+			newNode->next = currP;
 			pq->first = newNode;
-			pq->nitems++;
-			break;
+			pq->nItems++;
+			
 		} else {
 			while (currP->next != NULL) {
 				if (element.key == currP->Item->key) {
@@ -99,7 +95,7 @@ void addPQ(PQ pq, ItemPQ element) {
 					break;
 				} else if (element.key < currP->Item->key && element.key > currP->next->Item->key) {
 					ItemNode *newNode = makeItemNode(element);
-					newnode->next = currP->next;
+					newNode->next = currP->next;
 					currP->next = newNode;
 					pq->nItems++;
 					break;
@@ -124,13 +120,23 @@ void addPQ(PQ pq, ItemPQ element) {
 	}
 
 }
-
 ItemPQ dequeuePQ(PQ pq) {
 	assert(PQEmpty(pq) != 1);
-	return pq->last->Item;
+	
+	ItemPQ item = pq->last->Item;
+	ItemNodePointer lastP = pq->last;
+	ItemNodePointer currP = pq->first;
+
+	while (currP->next->next != NULL) {
+		currP = currP->next;
+	}
+ 	currP->next = NULL;
+ 	free(lastP);
+	return item;
 }
 
 void updatePQ(PQ pq, ItemPQ element) {
+	assert(pq != NULL);
 	ItemNodePointer currP = pq->first;
 	while (currP != NULL) {
 		if (currP->Item->key = element.key) {
@@ -141,10 +147,16 @@ void updatePQ(PQ pq, ItemPQ element) {
 	}
 }
 
+ItemNodePointer makeItemNode(ItemPQ item) { //problems with static
+	ItemNode *myItem = malloc(sizeof (ItemNode));
+	myItem->Item = item;
+	myItem->next = NULL;
+	return myItem;
+}
 void  showPQ(PQ pq) {
 
 }
 
-void  freePQ(PQ pq) {
+void  freePQ(PQ pq) {	
 
 }
