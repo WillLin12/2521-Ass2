@@ -24,22 +24,25 @@ static List makeLList () {
 
 
 
-/*
 
 
-static typedef struct ItemNode {
+
+static struct ItemNode {
 	ItemPQ *Item;
-	ItemNode *next;
-} ItemNode;
+	struct ItemNode *next;
+} 
+typedef struct ItemNode ItemNode;
+typedef struct ItemNode *ItemNodePointer;
 
-static ItemNode *makeItemNode (ItemPQ item) {
+static ItemNodePointer makeItemNode (ItemPQ item);
+static ItemNodePointer makeItemNode (ItemPQ item) {
 	ItemNode *myItem = malloc(sizeof (ItemNode));
 	myItem->Item = item;
 	myItem->next = NULL;
 	return myItem;
 }
 
-typedef ItemNode *ItemNodePointer;
+
 
 typedef struct PQRep {
 	int nItems;
@@ -49,7 +52,7 @@ typedef struct PQRep {
 	ItemNodePointer last; //smallest
 } PQRep;
 
-
+static ItemNode *makeItemNode (ItemPQ item);
 PQ newPQ() {
 	PQ myPQ = malloc(sizeof (PQRep));
 
@@ -115,7 +118,7 @@ void addPQ(PQ pq, ItemPQ element) {
 			} else {
 				ItemNode *newNode = makeItemNode(element);
 				newNode->next = NULL;
-				pq->last->next = newNode;
+				currP->next = newNode;
 				pq->nItems++;
 				pq->last = newNode;
 			}
@@ -124,13 +127,23 @@ void addPQ(PQ pq, ItemPQ element) {
 	}
 
 }
-
 ItemPQ dequeuePQ(PQ pq) {
 	assert(PQEmpty(pq) != 1);
-	return pq->last->Item;
+	
+	ItemPQ item = pq->last->Item;
+	ItemNodePointer lastP = pq->last;
+	ItemNodePointer currP = pq->first;
+
+	while (currP->next->next != NULL) {
+		currP = currP->next;
+	}
+ 	currP->next = NULL;
+ 	free(lastP);
+	return item;
 }
 
 void updatePQ(PQ pq, ItemPQ element) {
+	assert(pq != NULL);
 	ItemNodePointer currP = pq->first;
 	while (currP != NULL) {
 		if (currP->Item->key = element.key) {
@@ -145,41 +158,6 @@ void  showPQ(PQ pq) {
 
 }
 
-void  freePQ(PQ pq) {
+void  freePQ(PQ pq) {	
 
 }
-*/
-struct PQRep {
-
-};
-
-
-PQ newPQ() {
-	return NULL;
-}
-
-int PQEmpty(PQ p) {
-		return 0;
-}
-
-void addPQ(PQ pq, ItemPQ element) {
-
-}
-
-ItemPQ dequeuePQ(PQ pq) {
-	ItemPQ throwAway = {0};
-	return throwAway;
-}
-
-void updatePQ(PQ pq, ItemPQ element) {
-
-}
-
-void  showPQ(PQ pq) {
-
-}
-
-void  freePQ(PQ pq) {
-
-}
-
