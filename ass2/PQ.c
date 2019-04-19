@@ -4,51 +4,29 @@
 #include <stdio.h>
 #include <assert.h>
 
-/*
-static typedef struct LListrep {
-	ItemPQ *item;
-	newLList *next;
-} LListrep;
 
-static typedef LListrep *List;
+//typedef struct ItemNode ItemNode;
 
-static List makeLList () {
-	assert(list != NULL);
-	List L = malloc(sizeof (LListrep));
-	L->next = NULL;
-	L->item = NULL;
-	return L;
-}
-*/
-
-
-
-
-/*
-
-
-static typedef struct ItemNode {
-	ItemPQ *Item;
-	ItemNode *next;
+typedef struct ItemNode {
+	ItemPQ Item;
+	struct ItemNode *next;
 } ItemNode;
 
-static ItemNode *makeItemNode (ItemPQ item) {
-	ItemNode *myItem = malloc(sizeof (ItemNode));
-	myItem->Item = item;
-	myItem->next = NULL;
-	return myItem;
-}
+//struct ItemNode *ItemNodePointer;
 
-typedef ItemNode *ItemNodePointer;
+//typedef struct ItemNode ItemNode;
+//typedef struct ItemNode *ItemNodePointer;
+
 
 typedef struct PQRep {
 	int nItems;
 	//ItemPQ *items;
 	//int nslots;
-	ItemNodePointer first;
-	ItemNodePointer last; //smallest
+	ItemNode *first;
+	ItemNode *last; //smallest
 } PQRep;
 
+ItemNode *makeItemNode (ItemPQ item);
 
 PQ newPQ() {
 	PQ myPQ = malloc(sizeof (PQRep));
@@ -68,9 +46,9 @@ PQ newPQ() {
 }
 
 int PQEmpty(PQ p) {
-	if (p->nitems = 0) {
+	if (p->nItems == 0) {
 		return 1;
-	else {
+	} else {
 		return 0;
 	}
 }
@@ -82,24 +60,24 @@ void addPQ(PQ pq, ItemPQ element) {
 		pq->first = newNode;
 		pq->last = newNode;
 		pq->nItems++;
-		break;
+		
 	} else {
-		ItemNodePointer currP = pq->first;
-		ItemNodePointer prevP = pq->first;
-		if (element.key <= currP->Item->key) { //key is less than first item's key
+		ItemNode *currP = pq->first;
+		ItemNode *prevP = pq->first;
+		if (element.key <= currP->Item.key) { //key is less than first item's key
 			ItemNode *newNode = makeItemNode(element);
-			newnode->next = currP;
+			newNode->next = currP;
 			pq->first = newNode;
-			pq->nitems++;
-			break;
+			pq->nItems++;
+			
 		} else {
 			while (currP->next != NULL) {
-				if (element.key == currP->Item->key) {
-					currP->Item->value = element.value;
+				if (element.key == currP->Item.key) {
+					currP->Item.value = element.value;
 					break;
-				} else if (element.key < currP->Item->key && element.key > currP->next->Item->key) {
+				} else if (element.key < currP->Item.key && element.key > currP->next->Item.key) {
 					ItemNode *newNode = makeItemNode(element);
-					newnode->next = currP->next;
+					newNode->next = currP->next;
 					currP->next = newNode;
 					pq->nItems++;
 					break;
@@ -107,7 +85,7 @@ void addPQ(PQ pq, ItemPQ element) {
 				prevP = currP;
 				currP = currP->next;
 			}
-			if (element.key < currP->Item->key || element.key == currP->Item->key) {
+			if (element.key < currP->Item.key || element.key == currP->Item.key) {
 				ItemNode *newNode = makeItemNode(element);
 				newNode->next = currP;
 				prevP->next = newNode;
@@ -115,7 +93,7 @@ void addPQ(PQ pq, ItemPQ element) {
 			} else {
 				ItemNode *newNode = makeItemNode(element);
 				newNode->next = NULL;
-				pq->last->next = newNode;
+				currP->next = newNode;
 				pq->nItems++;
 				pq->last = newNode;
 			}
@@ -124,62 +102,43 @@ void addPQ(PQ pq, ItemPQ element) {
 	}
 
 }
-
 ItemPQ dequeuePQ(PQ pq) {
 	assert(PQEmpty(pq) != 1);
-	return pq->last->Item;
+	
+	ItemPQ item = pq->last->Item;
+	ItemNode *lastP = pq->last;
+	ItemNode *currP = pq->first;
+
+	while (currP->next->next != NULL) {
+		currP = currP->next;
+	}
+ 	currP->next = NULL;
+ 	free(lastP);
+	return item;
 }
 
 void updatePQ(PQ pq, ItemPQ element) {
-	ItemNodePointer currP = pq->first;
+	assert(pq != NULL);
+	ItemNode *currP = pq->first;
 	while (currP != NULL) {
-		if (currP->Item->key = element.key) {
-			currP->Item->value = element.value;
+		if (currP->Item.key == element.key) {
+			currP->Item.value = element.value;
 			break;
 		}
 		currP = currP->next;
 	}
 }
 
+ItemNode *makeItemNode(ItemPQ item) { //problems with static
+	ItemNode *myItem = malloc(sizeof (ItemNode));
+	myItem->Item = item;
+	myItem->next = NULL;
+	return myItem;
+}
 void  showPQ(PQ pq) {
 
 }
 
-void  freePQ(PQ pq) {
+void  freePQ(PQ pq) {	
 
 }
-*/
-struct PQRep {
-
-};
-
-
-PQ newPQ() {
-	return NULL;
-}
-
-int PQEmpty(PQ p) {
-		return 0;
-}
-
-void addPQ(PQ pq, ItemPQ element) {
-
-}
-
-ItemPQ dequeuePQ(PQ pq) {
-	ItemPQ throwAway = {0};
-	return throwAway;
-}
-
-void updatePQ(PQ pq, ItemPQ element) {
-
-}
-
-void  showPQ(PQ pq) {
-
-}
-
-void  freePQ(PQ pq) {
-
-}
-
