@@ -90,23 +90,40 @@ bool adjacent(Graph g, Vertex src, Vertex dest) {
 
 AdjList outIncident(Graph g, Vertex v) {
     assert(g != NULL);
-    if (g->edges[v] != NULL) {
-        AdjList currP = g->edges[v];
-        return currP;
-    } else {
+    if (g->edges[v] == NULL) {
         return NULL;
     }
+    else /*(g->edges[v] != NULL)*/ {
+        AdjList currP = g->edges[v];
+        return currP;
+    }
+
 }
 
 AdjList inIncident(Graph g, Vertex v) {
     assert(g != NULL);
 
-    AdjList headP = NULL;
+    //AdjList headP = NULL;
+    if (v == 0) {return NULL;}
+    AdjList n = NULL;
+    int i = 0;
+    while (i < g->nV) {
+        if (inLL(g->edges[i], v)) {
+            if (n == NULL) {
+                n = newAdjListNode(i, 0);
+            } else {
+                n->next = newAdjListNode(i,0);
+            }
+        }
+        i ++;
+    }
+    return n; 
+    
+    /*AdjList headP = NULL;
     AdjList currP = g->edges[0];
 	AdjList listP = NULL;
-	
+
     int i = 0;
-    
     while (i < g->nV) {
         currP = g->edges[i];
         while (currP != NULL) {
@@ -125,6 +142,7 @@ AdjList inIncident(Graph g, Vertex v) {
     }
     free(currP);
     return headP;
+    */
 }
 
 void  showGraph(Graph g) {
