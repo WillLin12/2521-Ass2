@@ -12,6 +12,8 @@ typedef struct ItemNode {
 	struct ItemNode *next;
 } ItemNode;
 
+
+	
 //struct ItemNode *ItemNodePointer;
 
 //typedef struct ItemNode ItemNode;
@@ -26,7 +28,7 @@ typedef struct PQRep {
 	ItemNode *last; //smallest
 } PQRep;
 
-ItemNode *makeItemNode (ItemPQ item);
+static ItemNode *makeItemNode (ItemPQ item);
 
 PQ newPQ() {
 	PQ myPQ = malloc(sizeof (PQRep));
@@ -52,7 +54,43 @@ int PQEmpty(PQ p) {
 		return 0;
 	}
 }
-
+void addPQ(PQ pq, ItemPQ element) {
+	assert (pq != NULL);
+	if (pq->nItems == 0) {
+		ItemNode *newNode = makeItemNode(element);		
+		pq->first = newNode;
+		pq->last = newNode;
+		pq->nItems++;
+	} else if (pq->first->Item.value > element.value) {
+		ItemNode *newNode = makeItemNode(element);
+		newNode->next = pq->first;
+		pq->first = newNode;
+		pq->nItems++;
+    } else if (pq->last->Item.value == element.value) {
+		pq->last->Item.value = element.value;
+	} else if (pq->last->Item.value < element.value) {
+		ItemNode *newNode = makeItemNode(element);
+		newNode->next = NULL;
+		pq->last->next = newNode;
+		pq->nItems++;
+	} else {
+		ItemNode *currP = pq->first;
+		while (currP->next != NULL) {
+			if (currP->Item.key == element.key) {
+				currP->Item.value = element.value;
+				break;
+			} else if (currP->Item.value < element.value && currP->next->Item.value > element.value) {
+				ItemNode *newNode = makeItemNode(element);
+				newNode->next = currP->next;
+				currP->next = newNode;
+				pq->nItems++;
+				break;
+			}
+			currP = currP->next;
+		}
+	}
+}
+/*
 void addPQ(PQ pq, ItemPQ element) {
 	assert(pq != NULL);
 	if (pq->nItems == 0) {
@@ -60,22 +98,20 @@ void addPQ(PQ pq, ItemPQ element) {
 		pq->first = newNode;
 		pq->last = newNode;
 		pq->nItems++;
-		
 	} else {
 		ItemNode *currP = pq->first;
-		ItemNode *prevP = pq->first;
 		if (element.key <= currP->Item.key) { //key is less than first item's key
 			ItemNode *newNode = makeItemNode(element);
 			newNode->next = currP;
 			pq->first = newNode;
-			pq->nItems++;
-			
+			pq->nItems++;		
 		} else {
+			ItemNode *prevP = pq->first;
 			while (currP->next != NULL) {
 				if (element.key == currP->Item.key) {
 					currP->Item.value = element.value;
 					break;
-				} else if (element.key < currP->Item.key && element.key > currP->next->Item.key) {
+				} else if (element.key > currP->Item.key && element.key < currP->next->Item.key) {
 					ItemNode *newNode = makeItemNode(element);
 					newNode->next = currP->next;
 					currP->next = newNode;
@@ -85,11 +121,14 @@ void addPQ(PQ pq, ItemPQ element) {
 				prevP = currP;
 				currP = currP->next;
 			}
-			if (element.key < currP->Item.key || element.key == currP->Item.key) {
+			if (element.key < currP->Item.key) {
 				ItemNode *newNode = makeItemNode(element);
 				newNode->next = currP;
 				prevP->next = newNode;
 				pq->nItems++;
+			} else if (element.key == currP->Item.key) {
+				currP->Item.value = element.value;
+				break;
 			} else {
 				ItemNode *newNode = makeItemNode(element);
 				newNode->next = NULL;
@@ -97,24 +136,20 @@ void addPQ(PQ pq, ItemPQ element) {
 				pq->nItems++;
 				pq->last = newNode;
 			}
-
 		}
 	}
-
 }
+*/
 ItemPQ dequeuePQ(PQ pq) {
 	assert(PQEmpty(pq) != 1);
-	
-	ItemPQ item = pq->last->Item;
-	ItemNode *lastP = pq->last;
-	ItemNode *currP = pq->first;
 
-	while (currP->next->next != NULL) {
-		currP = currP->next;
-	}
- 	currP->next = NULL;
- 	free(lastP);
-	return item;
+	ItemPQ myItem = pq->first->Item;
+	ItemNode *currP = pq->first;
+	pq->first = currP->next;
+	currP->next = NULL;
+	pq->nItems = pq->nItems - 1;
+ 	free(currP);
+	return myItem;
 }
 
 void updatePQ(PQ pq, ItemPQ element) {
@@ -129,8 +164,8 @@ void updatePQ(PQ pq, ItemPQ element) {
 	}
 }
 
-ItemNode *makeItemNode(ItemPQ item) { //problems with static
-	ItemNode *myItem = malloc(sizeof (ItemNode));
+static ItemNode *makeItemNode(ItemPQ item) { //problems with static
+	ItemNode *myItem = malloc(sizeof (ItemNode *));
 	myItem->Item = item;
 	myItem->next = NULL;
 	return myItem;
