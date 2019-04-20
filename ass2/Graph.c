@@ -84,11 +84,11 @@ AdjList inIncident(Graph g, Vertex v) {
 
     AdjList n = NULL;
     int i = 0;
-    while (i < g->nV) {
-        if (inLL(g->edges[i], v)) {
-            if (n == NULL) {
+    while (i < g->nV) { //loop through all edges
+        if (inLL(g->edges[i], v)) { // if vertex is in an edge list
+            if (n == NULL) { // if empty
                 n = newAdjListNode(i, 0);
-            } else {
+            } else { // add to list
                 n->next = newAdjListNode(i,0);
             }
         }
