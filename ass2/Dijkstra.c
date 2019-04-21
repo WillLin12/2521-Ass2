@@ -14,30 +14,34 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 	ShortestPaths *new = malloc(sizeof(ShortestPaths));
 	new->src = v;
 	new->noNodes = numVerticies(g);
+
 	//initialise other stuff
 	new->pred = malloc(new->noNodes*sizeof(PredNode));
 	for(int i = 0; i < new->noNodes; i++) {
 		new->dist[i] = INT_MAX;
 		new->pred[i]->v= -1;
 	}
-
-	//make a PQ
+	//make a PQ and add src to PQ
 	PQ pq = newPQ();
 	new->dist[v] = 0;
 	ItemPQ *source = makeItem(new, v);
 	addPQ(pq, *source);
+
 	// actual Dijkstras stuff
 	while (!PQEmpty(pq)){
+		//take smallest distance vertex from queue
 		ItemPQ curr = dequeuePQ(pq);
+
+		//loop through all adjacent vertex of curr and relax + add to queue
 		Vertex adj = 0;
-		while (adjacent(g, curr.key, adj)) {
+		while (adj <= new->noNodes && (adjacent(g, curr.key, adj))) {
 			if (new->dist[adj] > new->dist[curr.key] + curr.value) {
 				Relaxation (new, curr.key, adj, curr.value);
 				ItemPQ *insert = makeItem(new, adj);
 				addPQ(pq, *insert);
-
-				adj++;
 			}
+			adj ++;
+			
 		}
 	}
 	return *new;
