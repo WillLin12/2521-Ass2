@@ -5,23 +5,40 @@
 #include <assert.h>
 #include <stdio.h>
 #include <limits.h>
-static void Relaxation(ShortestPaths *s, int v, int w, int weight) ;
+
+static void Relaxation(ShortestPaths *s, int v, int w, int weight);
+static ItemPQ *makeItem(ShortestPaths *s, Vertex v);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
+	//initialise shortestpath
 	ShortestPaths *new = malloc(sizeof(ShortestPaths));
 	new->src = v;
 	new->noNodes = numVerticies(g);
+	//initialise other stuff
 	new->pred = malloc(new->noNodes*sizeof(PredNode));
 	for(int i = 0; i < new->noNodes; i++) {
 		new->dist[i] = INT_MAX;
 		new->pred[i]->v= -1;
 	}
+
+	//make a PQ
 	PQ pq = newPQ();
-	addPQ(pq, new->src); //figure out how to add src vertex to PQ
-	new->dist[new->src] = 0;
-
+	new->dist[v] = 0;
+	ItemPQ *source = makeItem(new, v);
+	addPQ(pq, *source);
+	// actual Dijkstras stuff
 	while (!PQEmpty(pq)){
+		ItemPQ curr = dequeuePQ(pq);
+		Vertex adj = 0;
+		while (adjacent(g, curr.key, adj)) {
+			if (new->dist[adj] > new->dist[curr.key] + curr.value) {
+				Relaxation (new, curr.key, adj, curr.value);
+				ItemPQ *insert = makeItem(new, adj);
+				addPQ(pq, *insert);
 
+				adj++;
+			}
+		}
 	}
 	return *new;
 }
@@ -36,10 +53,16 @@ void  freeShortestPaths(ShortestPaths paths) {
 }
 
 static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
-	if (s->dist[v] + weight < s->dist[w]) {
+	//if (s->dist[v] + weight < s->dist[w]) {
 		s->dist[w] = s->dist[v] + weight;
 		s->pred[w]->v = v;
 		
-	}
+	//}
 
+}
+static ItemPQ *makeItem(ShortestPaths *s, Vertex v) {
+	ItemPQ *item = malloc(sizeof(ItemPQ));
+	item->key = v;
+	item->value = s->dist[v];
+	return item;
 }
