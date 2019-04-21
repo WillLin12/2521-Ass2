@@ -17,13 +17,16 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 
 	//initialise other stuff
 	new->pred = malloc(new->noNodes*sizeof(PredNode));
-	for(int i = 0; i < new->noNodes; i++) {
+	int i = 0;
+	while (i < new->noNodes) {
+	//for(int i = 0; i < new->noNodes; i++) {
 		new->dist[i] = INT_MAX;
 		new->pred[i]->v= -1;
+		i ++;
 	}
 	//make a PQ and add src to PQ
 	PQ pq = newPQ();
-	new->dist[v] = 0;
+	new->dist[new->src] = 0;
 	ItemPQ *source = makeItem(new, v);
 	addPQ(pq, *source);
 
