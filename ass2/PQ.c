@@ -136,8 +136,10 @@ void addPQ(PQ pq, ItemPQ element) {
 				pq->nItems++;
 				pq->last = newNode;
 			}
+
 		}
 	}
+
 }
 */
 ItemPQ dequeuePQ(PQ pq) {
@@ -155,13 +157,28 @@ ItemPQ dequeuePQ(PQ pq) {
 void updatePQ(PQ pq, ItemPQ element) {
 	assert(pq != NULL);
 	ItemNode *currP = pq->first;
+	ItemNode *prevP = pq->first;
 	while (currP != NULL) {
 		if (currP->Item.key == element.key) {
 			currP->Item.value = element.value;
-			break;
+			ItemNode *ItemP = currP;
+			if (currP == prevP) {
+				pq->first = currP->next;
+				currP->next = NULL;
+			} else if (currP->next != NULL) {
+				prevP->next = currP->next;
+				currP->next = NULL;
+			} else {
+				pq->last = prevP;
+				prevP->next = NULL;
+			}
+			addPQ(pq, ItemP->Item);
+			free(currP);
 		}
+		prevP = currP;
 		currP = currP->next;
 	}
+	
 }
 
 static ItemNode *makeItemNode(ItemPQ item) { //problems with static
