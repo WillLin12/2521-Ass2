@@ -90,7 +90,56 @@ void addPQ(PQ pq, ItemPQ element) {
 		}
 	}
 }
-
+/*
+void addPQ(PQ pq, ItemPQ element) {
+	assert(pq != NULL);
+	if (pq->nItems == 0) {
+		ItemNode *newNode = makeItemNode(element);
+		pq->first = newNode;
+		pq->last = newNode;
+		pq->nItems++;
+	} else {
+		ItemNode *currP = pq->first;
+		if (element.key <= currP->Item.key) { //key is less than first item's key
+			ItemNode *newNode = makeItemNode(element);
+			newNode->next = currP;
+			pq->first = newNode;
+			pq->nItems++;		
+		} else {
+			ItemNode *prevP = pq->first;
+			while (currP->next != NULL) {
+				if (element.key == currP->Item.key) {
+					currP->Item.value = element.value;
+					break;
+				} else if (element.key > currP->Item.key && element.key < currP->next->Item.key) {
+					ItemNode *newNode = makeItemNode(element);
+					newNode->next = currP->next;
+					currP->next = newNode;
+					pq->nItems++;
+					break;
+				}	
+				prevP = currP;
+				currP = currP->next;
+			}
+			if (element.key < currP->Item.key) {
+				ItemNode *newNode = makeItemNode(element);
+				newNode->next = currP;
+				prevP->next = newNode;
+				pq->nItems++;
+			} else if (element.key == currP->Item.key) {
+				currP->Item.value = element.value;
+				break;
+			} else {
+				ItemNode *newNode = makeItemNode(element);
+				newNode->next = NULL;
+				currP->next = newNode;
+				pq->nItems++;
+				pq->last = newNode;
+			}
+		}
+	}
+}
+*/
 ItemPQ dequeuePQ(PQ pq) {
 	assert(PQEmpty(pq) != 1);
 
@@ -106,13 +155,28 @@ ItemPQ dequeuePQ(PQ pq) {
 void updatePQ(PQ pq, ItemPQ element) {
 	assert(pq != NULL);
 	ItemNode *currP = pq->first;
+	ItemNode *prevP = pq->first;
 	while (currP != NULL) {
 		if (currP->Item.key == element.key) {
 			currP->Item.value = element.value;
-			break;
+			ItemNode *ItemP = currP;
+			if (currP == prevP) {
+				pq->first = currP->next;
+				currP->next = NULL;
+			} else if (currP->next != NULL) {
+				prevP->next = currP->next;
+				currP->next = NULL;
+			} else {
+				pq->last = prevP;
+				prevP->next = NULL;
+			}
+			addPQ(pq, ItemP->Item);
+			free(currP);
 		}
+		prevP = currP;
 		currP = currP->next;
 	}
+	
 }
 
 static ItemNode *makeItemNode(ItemPQ item) { //problems with static
@@ -128,4 +192,3 @@ void  showPQ(PQ pq) {
 void  freePQ(PQ pq) {	
 
 }
-
