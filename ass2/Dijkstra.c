@@ -41,7 +41,9 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		while (adj <= new->noNodes) {
 			if (adjacent(g, curr.key, adj)) {
 				if (new->dist[adj] > new->dist[curr.key] + curr.value) {
+					//relaxation 
 					Relaxation (new, curr.key, adj, curr.value);
+					//add vertex to queue
 					ItemPQ *insert = makeItem(new, adj);
 					addPQ(pq, *insert);
 				}
