@@ -14,9 +14,9 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 	ShortestPaths *new = malloc(sizeof(ShortestPaths));
 	new->src = v;
 	new->noNodes = numVerticies(g);
-
-	//initialise other stuff
 	new->pred = malloc(new->noNodes*sizeof(PredNode));
+
+	//initialise dist and pred
 	int i = 0;
 	while (i < new->noNodes) {
 	//for(int i = 0; i < new->noNodes; i++) {
@@ -30,24 +30,29 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 	ItemPQ *source = makeItem(new, v);
 	addPQ(pq, *source);
 
+	// add all vertex to PQ
+	i = 0;
+	while (i <= new->noNodes) {
+		ItemPQ *insert = makeItem(new, i);
+		addPQ (pq, *insert);
+		i ++;
+	}
 	// actual Dijkstras stuff
 	while (!PQEmpty(pq)){
 		//take smallest distance vertex from queue
 		ItemPQ curr = dequeuePQ(pq);
 
 		//loop through all adjacent vertex of curr and relax + add to queue
-		//possible fixes use outincident method? use cuthberts method?
 		Vertex adj = 0;
 		while (adj <= new->noNodes) {
 			if (adjacent(g, curr.key, adj)) {
+				//relax and update priority
 				if (new->dist[adj] > new->dist[curr.key] + curr.value) {
 					Relaxation (new, curr.key, adj, curr.value);
-					ItemPQ *insert = makeItem(new, adj);
-					addPQ(pq, *insert);
+					curr.value = new->dist[adj];
 				}
 			}
 				adj ++;
-			
 		}
 	}
 	return *new;
