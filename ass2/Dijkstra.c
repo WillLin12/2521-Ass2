@@ -33,14 +33,17 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		ItemPQ curr = dequeuePQ(pq);
 
 		//loop through all adjacent vertex of curr and relax + add to queue
+		//possible fixes use outincident method? use cuthberts method?
 		Vertex adj = 0;
-		while (adj <= new->noNodes && (adjacent(g, curr.key, adj))) {
-			if (new->dist[adj] > new->dist[curr.key] + curr.value) {
-				Relaxation (new, curr.key, adj, curr.value);
-				ItemPQ *insert = makeItem(new, adj);
-				addPQ(pq, *insert);
+		while (adj <= new->noNodes) {
+			if (adjacent(g, curr.key, adj)) {
+				if (new->dist[adj] > new->dist[curr.key] + curr.value) {
+					Relaxation (new, curr.key, adj, curr.value);
+					ItemPQ *insert = makeItem(new, adj);
+					addPQ(pq, *insert);
+				}
 			}
-			adj ++;
+				adj ++;
 			
 		}
 	}
