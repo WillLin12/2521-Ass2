@@ -65,7 +65,18 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 				adj ++;	
 		} */
 	}
+	//set pred to NULL properly
+	i = 0;
+	while (i < new->noNodes) {
+		if (new->pred[i]->v == -1){
+			new->pred[i] = NULL;
+		}
+		i ++;
+	}
+
 	return *new;
+
+
 }
 
 void showShortestPaths(ShortestPaths paths) {
