@@ -182,7 +182,7 @@ void updatePQ(PQ pq, ItemPQ element) {
 }
 
 static ItemNode *makeItemNode(ItemPQ item) { //problems with static
-	ItemNode *myItem = malloc(sizeof (ItemNode *));
+	ItemNode *myItem = malloc(sizeof (ItemNode));
 	myItem->Item = item;
 	myItem->next = NULL;
 	return myItem;

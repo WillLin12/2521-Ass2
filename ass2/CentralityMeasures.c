@@ -5,17 +5,52 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-NodeValues outDegreeCentrality(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+static NodeValues *newNode(Graph g);
+
+static NodeValues *newNode(Graph g) {
+	NodeValues *newNode = malloc(sizeof(NodeValues));
+	newNode->noNodes = numVerticies(g);
+	newNode->values = malloc(newNode->noNodes*sizeof (double));
+	int i = 0;
+	while (i < newNode->noNodes) {
+		newNode->values[i] = 0;
+		i ++;
+	} 
+	return newNode;
 }
-NodeValues inDegreeCentrality(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+
+NodeValues outDegreeCentrality(Graph g) {
+	NodeValues *myNode = newNode(g);
+	int i = 0;
+	while (i < myNode->noNodes) {
+		AdjList myList = outIncident (g, i);
+		while (myList != NULL ) {
+			myNode->values[i] += 1;
+			myList = myList->next;
+		}	
+		i++;
+	}
+	return *myNode;
 }
+
+NodeValues inDegreeCentrality(Graph g) {
+	NodeValues *myNode = newNode(g);
+	int i = 0;
+	while (i < myNode->noNodes) {
+		AdjList myList = inIncident (g, i);
+		while (myList != NULL ) {
+			myNode->values[i] += 1;
+			myList = myList->next;
+		}	
+		i++;
+	}
+	return *myNode;
+}
+
 NodeValues degreeCentrality(Graph g) {
 	NodeValues throwAway = {0};
 	return throwAway;
+	//return inDegreeCentrality(g) + outDegreeCentrality(g);
 }
 
 NodeValues closenessCentrality(Graph g){

@@ -14,15 +14,16 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 	ShortestPaths *new = malloc(sizeof(ShortestPaths));
 	new->src = v;
 	new->noNodes = numVerticies(g);
-	new->pred = malloc(new->noNodes*sizeof(PredNode));
+	new->pred = malloc(new->noNodes*sizeof(PredNode *));
 	new->dist = malloc(new->noNodes*sizeof(int));
 
 	//initalise dist and preds
 	int i = 0;
 	while (i < new->noNodes) {
-	//for(int i = 0; i < new->noNodes; i++) {
 		new->dist[i] = INT_MAX;
-		new->pred[i]->v= -1;
+		new->pred[i] = malloc(sizeof(PredNode));
+		new->pred[i]->v = -1;
+		new->pred[i]->next = NULL;
 		i ++;
 	}
 	//make a PQ and add src to PQ
@@ -36,9 +37,21 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		//take smallest distance vertex from queue
 		ItemPQ curr = dequeuePQ(pq);
 
+		//loop through all vertices adjacent to curr adj = adjacent vertex
+		AdjList adj = outIncident(g, curr.key);
+		while (adj != NULL) {
+			//relax 
+			if (new->dist[adj->w] > new->dist[curr.key] + adj->weight) {
+				Relaxation(new, curr.key, adj->w, adj->weight);
+				//add adj to queue
+				ItemPQ *insert = makeItem(new, adj->w);
+				addPQ(pq, *insert);
+			}
+			adj = adj->next;
+		}
+
 		//loop through all adjacent vertex of curr and relax + add to queue
-		//possible fixes use outincident method? use cuthberts method?
-		Vertex adj = 0;
+		/* Vertex adj = 0;
 		while (adj <= new->noNodes) {
 			if (adjacent(g, curr.key, adj)) {
 				if (new->dist[adj] > new->dist[curr.key] + curr.value) {
@@ -49,9 +62,8 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 					addPQ(pq, *insert);
 				}
 			}
-				adj ++;
-			
-		}
+				adj ++;	
+		} */
 	}
 	return *new;
 }

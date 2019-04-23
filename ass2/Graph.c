@@ -121,7 +121,7 @@ void  freeGraph(Graph g) {
 }
 
 static AdjList newAdjListNode(Vertex v, int weight) {
-    AdjList n = malloc(sizeof (AdjList));
+    AdjList n = malloc(sizeof (adjListNode));
     n->w = v;
     n->weight = weight;
     n->next = NULL;
