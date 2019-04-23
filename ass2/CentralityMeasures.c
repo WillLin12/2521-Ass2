@@ -5,17 +5,49 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+static NodeValues newNode() {
+	NodeValues newNode = malloc(sizeof(NodeValues));
+	newNode->noNodes = 0 ;
+	newNode->values = 0;
+	return newNode;
+}
+
 NodeValues outDegreeCentrality(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+	NodeValues myNode = newNode();
+	myNode->noNodes = numVertices(g);
+	myNode->values = malloc(noNode*sizeof (double);
+	int i = 0;
+	while (i < myNode->noNodes) {
+		Adjlist myList = outIncident (g, i);
+		while (myList != NULL ) {
+			myNode->values[i]++;
+			myList = myList->next;
+		}	
+		i++;
+	}
+	return myNode;
 }
-NodeValues inDegreeCentrality(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+
+NodeValues inDegreeCentrality(Graph g) {
+	NodeValues myNode = newNode();
+	myNode->noNodes = numVertices(g);
+	myNode->values = malloc(noNode*sizeof (double);
+	int i = 0;
+	while (i < myNode->noNodes) {
+		Adjlist myList = inIncident (g, i);
+		while (myList != NULL ) {
+			myNode->values[i]++;
+			myList = myList->next;
+		}	
+		i++;
+	}
+	return myNode;
 }
+
 NodeValues degreeCentrality(Graph g) {
 	NodeValues throwAway = {0};
 	return throwAway;
+	//return inDegreeCentrality(g) + outDegreeCentrality(g);
 }
 
 NodeValues closenessCentrality(Graph g){
