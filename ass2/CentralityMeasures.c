@@ -69,7 +69,9 @@ NodeValues betweennessCentralityNormalised(Graph g){
 }
 
 void showNodeValues(NodeValues values){
-
+	for (int i = 0; i < values.noNodes; i++) {
+		printf("%d: %lf\n", i, values.values[i]);
+	} 
 }
 
 void freeNodeValues(NodeValues values){

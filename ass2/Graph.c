@@ -88,8 +88,12 @@ AdjList inIncident(Graph g, Vertex v) {
         if (inLL(g->edges[i], v)) { // if vertex is in an edge list
             if (n == NULL) { // if empty
                 n = newAdjListNode(i, 0);
-            } else { // add to list
-                n->next = newAdjListNode(i,0);
+            } else { //append
+                AdjList curr = n;
+                while (curr->next != NULL) {
+                    curr = curr->next;
+                }
+                curr->next = newAdjListNode(i,0);
             }
         }
         i ++;
