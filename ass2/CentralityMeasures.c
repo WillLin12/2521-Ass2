@@ -45,8 +45,22 @@ NodeValues inDegreeCentrality(Graph g) {
 }
 
 NodeValues degreeCentrality(Graph g) {
-	NodeValues throwAway = {0};
-	return throwAway;
+	NodeValues *myNode = newNode(g);
+	int i = 0;
+	while (i < myNode->noNodes) {
+		Adjlist myList = inIncident (g, i);
+		Adjlist myListTwo = outIncident(g, i);
+		while (myList != NULL) {
+			myNode->values[i]++;
+			myList = myList->next;
+		}
+		while (myListTwo != NULL) {
+			myNode->values[i]++;
+			myListTwo = myListTwo->next;
+		}
+		i++;
+	}
+	return *myNode;
 	//return inDegreeCentrality(g) + outDegreeCentrality(g);
 }
 
