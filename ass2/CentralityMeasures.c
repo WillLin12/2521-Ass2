@@ -143,6 +143,7 @@ NodeValues closenessCentrality(Graph g){
 }
 
 
+
 NodeValues betweennessCentrality(Graph g){
 	NodeValues throwAway = {0};
 	return throwAway;
