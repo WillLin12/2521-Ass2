@@ -46,7 +46,6 @@ NodeValues inDegreeCentrality(Graph g) {
 	}
 	return *myNode;
 }
-
 NodeValues degreeCentrality(Graph g) {
 	NodeValues *myNode = newNode(g);
 	int i = 0;
@@ -64,11 +63,11 @@ NodeValues degreeCentrality(Graph g) {
 		i++;
 	}
 	return *myNode;
-	//return inDegreeCentrality(g) + outDegreeCentrality(g);
 }
 
 NodeValues closenessCentrality(Graph g){
-	NodeValues *myNode = newNode(g);
+
+	/*NodeValues *myNode = newNode(g);
 	int i = 0;
 
 	while (i < myNode->noNodes) {
@@ -96,10 +95,52 @@ NodeValues closenessCentrality(Graph g){
 		i++;
 
 	}
+	return *myNode; */
+
+	NodeValues *myNode = newNode(g);
+
+	double N = numVerticies(g);
+	
+
+	int currV = 0;
+	//check dijkstra for each array in graph
+	while (currV < N) {
+		ShortestPaths new = dijkstra(g, currV);
+
+		//calculate "n" number of reachable nodes by looping through dist array and adding when reachable ie != 0
+		int i = 0;
+		double n = 0;
+		while (i < N) {
+			if (new.dist[i] != 0) {
+				n ++;
+			}
+			i ++;
+		}
+		
+
+		//calculate sum of all shortest paths 
+		int j = 0;
+		double sum = 0;
+		while (j < N) {
+			sum = sum + new.dist[j];
+			j ++;
+		}
+
+		//printf("Number of vertexes = %lf\n", N);
+		//printf("n = %lf\n", n);
+		//printf("sum = %lf\n", sum);
+		double formula = ((n)/(N-1)) * ((n)/(sum));
+		if (sum == 0) {
+			formula = 0;
+		}
+		//printf("formula = %lf\n\n", formula);
+		myNode->values[currV] = formula;
+
+		currV ++;
+	}
+
 	return *myNode;
 }
-
-
 
 
 NodeValues betweennessCentrality(Graph g){

@@ -128,6 +128,10 @@ static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
 			s->pred[w] = malloc(sizeof(PredNode));
 			s->pred[w]->v = v;
 			s->pred[w]->next = NULL;
+		} else {
+			s->pred[w] = malloc(sizeof(PredNode));
+			s->pred[w]->v = v;
+			s->pred[w]->next = NULL;
 		}
  
 		/*if (s->dist[w] < old) {
