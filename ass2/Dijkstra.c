@@ -59,6 +59,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		}
 	}
 
+
 	int j = 0;
 	while (j < new->noNodes) {
 		if (new->dist[j] == INT_MAX) {
