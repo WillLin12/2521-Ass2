@@ -100,8 +100,35 @@ NodeValues closenessCentrality(Graph g){
 }
 
 NodeValues betweennessCentrality(Graph g) {
-	NodeValues throwAway = {0};
-	return throwAway;
+	double sum = 0;
+	NodeValues *myNode = newNode(g);
+	int i = 0;
+	int vertexNo = 0;
+	int currV = 0;
+	int predNo = 0;
+	int predCount = 0;
+	while (i < myNode->noNodes) { //makes sure all vertices are covered
+		shortestPaths new = djikstra(g, i)
+		while (predCount < new.noNodes) { //makes sure all paths of a vertex arer covered
+			currPred = new->pred[predCount];
+			while (currPred != NULL) { //makes sure all predecessors of one vertex arer counted
+				somethingPred = new->pred[currPred]; //now find shortest path from predecessor to original vertex
+				if (new->pred.v != i || new->pred.v != currPred.v) { //if the pred isnt the starting or end vertex of path add one to the counter on myNode
+					myNode->values[pred.v]++;
+				}
+
+
+				currPred = currPred->next;
+			}
+			predCount++;
+		}
+
+
+
+
+	}
+	myNode->values[i] = ...
+	i++;
 }
 
 NodeValues betweennessCentralityNormalised(Graph g){
