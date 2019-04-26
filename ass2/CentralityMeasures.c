@@ -112,7 +112,7 @@ NodeValues betweennessCentrality(Graph g) {
 		while (predCount < new.noNodes) { //makes sure all paths of a vertex arer covered
 			currPred = new->pred[predCount];
 			while (currPred != NULL) { //makes sure all predecessors of one vertex arer counted
-				somethingPred = new->pred[currPred]; //now find shortest path from predecessor to original vertex
+				somethingPred = new->pred[currPred]; //STUCKHEREnow find shortest path from predecessor to original vertex
 				if (new->pred.v != i || new->pred.v != currPred.v) { //if the pred isnt the starting or end vertex of path add one to the counter on myNode
 					myNode->values[pred.v]++;
 				}
