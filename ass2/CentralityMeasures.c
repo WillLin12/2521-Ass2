@@ -67,41 +67,10 @@ NodeValues degreeCentrality(Graph g) {
 
 NodeValues closenessCentrality(Graph g){
 
-	/*NodeValues *myNode = newNode(g);
-	int i = 0;
-
-	while (i < myNode->noNodes) {
-		int n = 0;
-		AdjList myList = inIncident (g, i);
-		AdjList myListTwo = outIncident(g, i);
-		while (myList != NULL) {
-			n++;
-			myList = myList->next;
-		}
-		while (myListTwo != NULL) {
-			n++;
-			myListTwo = myListTwo->next;
-		}
-		ShortestPaths Distance = dijkstra(g, i);
-		int shortestDistance = 0;
-		int j = 0;
-
-		while (j < Distance.noNodes) {
-			shortestDistance = shortestDistance + Distance.dist[j];
-			j++;
-		}
-		
-		myNode->values[i] = ((n-1)/(numVerticies(g) - 1)) * ((n -1)/shortestDistance);
-		i++;
-
-	}
-	return *myNode; */
-
 	NodeValues *myNode = newNode(g);
-
+	//total number of nodes on graph
 	double N = numVerticies(g);
 	
-
 	int currV = 0;
 	//check dijkstra for each array in graph
 	while (currV < N) {

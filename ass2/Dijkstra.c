@@ -32,8 +32,14 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 	PQ pq = newPQ();
 	ItemPQ *source = makeItem(new, v);
 	addPQ(pq, *source);
-
-
+/*
+	i = 0;
+	while (i < new->noNodes) {
+		ItemPQ *add = makeItem(new, i);
+		addPQ(pq, *add);
+		i ++;
+	}
+*/
 	// actual Dijkstras stuff
 	while (!PQEmpty(pq)){
 		//take smallest distance vertex from queue
@@ -45,11 +51,20 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 			//relax
 			// Next debug step: set a new if statement if node == 3 and trying to relaxation
 			if (new->dist[adj->w] >= new->dist[curr.key] + adj->weight) {
+
 				// IF (node == 3) print something / break in GDB
-				Relaxation(new, curr.key, adj->w, adj->weight);
+				
 				//add adj to queue
-				ItemPQ *insert = makeItem(new, adj->w);
-				addPQ(pq, *insert);
+				if (new->dist[adj->w] > new->dist[curr.key] + adj->weight) {
+					Relaxation(new, curr.key, adj->w, adj->weight);
+					ItemPQ *insert = makeItem(new, adj->w);
+					addPQ(pq, *insert);
+					//ItemPQ *update = makeItem(new, adj->w);
+					//updatePQ(pq, *update);
+
+				} else {
+					Relaxation(new, curr.key, adj->w, adj->weight);	
+				}
 				//ItemPQ *update = makeItem(new, adj->w);
 				//updatePQ(pq, *update);
 
@@ -110,7 +125,7 @@ static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
 			s->pred[w]->v = v;
 			s->pred[w]->next = NULL;
 		}
-		else if (s->dist[w] < old) {
+		if (s->dist[w] < old) {
 			PredNode *curr = s->pred[w];				
 			while (curr != NULL) {
 				PredNode *tmp = curr;
@@ -121,22 +136,21 @@ static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
 			s->pred[w]->v = v;
 			s->pred[w]->next= NULL;
 		} else if (s->dist[w] == old && s->pred[w]->v != v) {
+				int test = -100;
 				PredNode *curr = s->pred[w];
 				while (curr->next != NULL) {
+					if (curr->next->v == v) {
+						test = 100;
+					}
 					curr = curr->next;
 				}
+				if (test != 100) {
 				curr->next = malloc(sizeof(PredNode));
 				curr->next->v = v;
-		} else if (s->pred[w] == NULL) {
-			s->pred[w] = malloc(sizeof(PredNode));
-			s->pred[w]->v = v;
-			s->pred[w]->next = NULL;
-		} else {
-			s->pred[w] = malloc(sizeof(PredNode));
-			s->pred[w]->v = v;
-			s->pred[w]->next = NULL;
+				curr->next->next = NULL;
+				}
 		}
- 
+
 		/*if (s->dist[w] < old) {
 				if (s->pred[w] == NULL) {
 					s->pred[w] = malloc(sizeof(PredNode));
