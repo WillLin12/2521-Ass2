@@ -18,6 +18,7 @@ static NodeValues *newNode(Graph g) {
 	} 
 	return newNode;
 }
+static int pathFinder(Graph g, int src, int last, int dest, ShortestPaths shortestPath, NodeValues *myNode);
 
 NodeValues outDegreeCentrality(Graph g) {
 	NodeValues *myNode = newNode(g);
@@ -103,7 +104,7 @@ NodeValues betweennessCentrality(Graph g) {
 	double sum = 0;
 	NodeValues *myNode = newNode(g);
 	int i = 0;
-	int predNo = 0;
+
 	int predCount = 0;
 	while (i < myNode->noNodes) {
 		ShortestPaths new = dijkstra(g, i); //makes sure all vertices are covered
@@ -121,13 +122,16 @@ NodeValues betweennessCentrality(Graph g) {
 				currPred = currPred->next;
 			}*/
 		predCount++;
-	}
+		}
+	
 	myNode->values[i] = (myNode->values[i]/sum);
 	i++;
+	}
+	return *myNode;
 }
 
 
-NodeValues betweennessCentralityNormalised(Graph g) { 
+NodeValues betweennessCentralityNormalised(Graph g){ 
 	NodeValues throwAway = {0};
 	return throwAway;
 }
@@ -135,10 +139,10 @@ static int pathFinder(Graph g, int src, int last, int dest, ShortestPaths shorte
 
 
 	if (shortestPath.pred[dest] != NULL) {
-		return pathFinder(g, src, last, shortestPath->pred[shortestPath->pred[dest]->next.v], shortestPath, myNode)
+		return pathFinder(g, src, last, shortestPath.pred[shortestPath.pred[dest]->next.v], shortestPath, myNode);
 	}
-	if (shortestPath.[dest].v != src && shortestPath.[dest].v != src) {
-		myNode.values[shortestPath.pred[dest].v]++;
+	if (shortestPath.pred[dest].v != src && shortestPath.pred[dest].v != last) {
+		myNode->values[shortestPath.pred[dest].v]++;
 	}
 
 	return (pathFinder + 1);
