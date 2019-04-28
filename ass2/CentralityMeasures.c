@@ -124,7 +124,7 @@ NodeValues betweennessCentrality(Graph g) {
 		predCount++;
 		}
 	
-	myNode->values[i] = (myNode->values[i]/sum);
+	myNode->values[i] = (myNode->values[i]/sum); //plug in formula
 	i++;
 	}
 	return *myNode;
@@ -137,11 +137,11 @@ NodeValues betweennessCentralityNormalised(Graph g){
 }
 static int pathFinder(Graph g, int src, int last, int dest, ShortestPaths shortestPath, NodeValues *myNode) {
 
-	if (shortestPath.pred[dest] != NULL) {
-		return pathFinder(g, src, last, shortestPath.pred[shortestPath.pred[dest]->next->v]->v, shortestPath, myNode);
+	if (shortestPath.pred[dest] != NULL) { //if there are more pred
+		return pathFinder(g, src, last, shortestPath.pred[shortestPath.pred[dest]->next->v]->v, shortestPath, myNode); //return pred->next vertice
 	}
-	if (shortestPath.pred[dest]->v != src && shortestPath.pred[dest]->v != last) {
-		myNode->values[shortestPath.pred[dest]->v]++;
+	if (shortestPath.pred[dest]->v != src && shortestPath.pred[dest]->v != last) { //if the path isnt the first vertice or last vertice eg for path 1-5 , dont count 1 or 5  but count 2-3-4 if they are in the path
+		myNode->values[shortestPath.pred[dest]->v]++; //adds to the double* array we are returning
 	}
 
 	return 1;
