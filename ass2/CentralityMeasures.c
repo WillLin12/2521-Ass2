@@ -103,37 +103,45 @@ NodeValues betweennessCentrality(Graph g) {
 	double sum = 0;
 	NodeValues *myNode = newNode(g);
 	int i = 0;
-	int vertexNo = 0;
-	int currV = 0;
 	int predNo = 0;
 	int predCount = 0;
-	while (i < myNode->noNodes) { //makes sure all vertices are covered
-		shortestPaths new = djikstra(g, i)
-		while (predCount < new.noNodes) { //makes sure all paths of a vertex arer covered
-			currPred = new->pred[predCount];
-			while (currPred != NULL) { //makes sure all predecessors of one vertex arer counted
-				somethingPred = new->pred[currPred]; //STUCKHEREnow find shortest path from predecessor to original vertex
-				if (new->pred.v != i || new->pred.v != currPred.v) { //if the pred isnt the starting or end vertex of path add one to the counter on myNode
-					myNode->values[pred.v]++;
-				}
+	while (i < myNode->noNodes) {
+		ShortestPaths new = dijkstra(g, i); //makes sure all vertices are covered
+		//ShortestPaths *new = *newPath;
+		sum = 0;
+		while (predCount < new.noNodes) { //makes sure all paths of a vertex are covered
+			//currPred = new->pred[predCount];
+			if (new.pred[predCount] != NULL) {
+				sum = pathFinder (g, i, predCount, 0, new, myNode);
+			}
+			/*while (currPred != NULL) { //makes sure all predecessors of one vertex are counted
+				sum = pathFinder(g, i, predCount)
 
 
 				currPred = currPred->next;
-			}
-			predCount++;
-		}
-
-
-
-
+			}*/
+		predCount++;
 	}
-	myNode->values[i] = ...
+	myNode->values[i] = (myNode->values[i]/sum);
 	i++;
 }
 
-NodeValues betweennessCentralityNormalised(Graph g){
+
+NodeValues betweennessCentralityNormalised(Graph g) { 
 	NodeValues throwAway = {0};
 	return throwAway;
+}
+static int pathFinder(Graph g, int src, int last, int dest, ShortestPaths shortestPath, NodeValues *myNode) {
+
+
+	if (shortestPath.pred[dest] != NULL) {
+		return pathFinder(g, src, last, shortestPath->pred[shortestPath->pred[dest]->next.v], shortestPath, myNode)
+	}
+	if (shortestPath.[dest].v != src && shortestPath.[dest].v != src) {
+		myNode.values[shortestPath.pred[dest].v]++;
+	}
+
+	return (pathFinder + 1);
 }
 
 void showNodeValues(NodeValues values){
