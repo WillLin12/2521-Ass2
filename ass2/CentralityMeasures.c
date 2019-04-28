@@ -137,15 +137,15 @@ NodeValues betweennessCentralityNormalised(Graph g){
 }
 static int pathFinder(Graph g, int src, int last, int dest, ShortestPaths shortestPath, NodeValues *myNode) {
 
-
 	if (shortestPath.pred[dest] != NULL) {
-		return pathFinder(g, src, last, shortestPath.pred[shortestPath.pred[dest]->next.v], shortestPath, myNode);
+		return pathFinder(g, src, last, shortestPath.pred[shortestPath.pred[dest]->next->v]->v, shortestPath, myNode);
 	}
-	if (shortestPath.pred[dest].v != src && shortestPath.pred[dest].v != last) {
-		myNode->values[shortestPath.pred[dest].v]++;
+	if (shortestPath.pred[dest]->v != src && shortestPath.pred[dest]->v != last) {
+		myNode->values[shortestPath.pred[dest]->v]++;
 	}
 
-	return (pathFinder + 1);
+	return 1;
+	//return (pathFinder(g, src, last,shortestPath.pred[shortestPath.pred[dest]->v]->v, shortestPath, myNode) + 1);
 }
 
 void showNodeValues(NodeValues values){
