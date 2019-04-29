@@ -160,7 +160,7 @@ static bool inLL(adjListNode *L, Vertex n) {
       return false;
    if (L->w == n)
      return true;
-
+     
    return inLL(L->next, n);
 }
 
