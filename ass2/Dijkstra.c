@@ -41,22 +41,18 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		while (adj != NULL) {
 			//if distance of current Node + weight to w is less that distance w relax: update Distance and pred and add to queue 
 			if (new->dist[adj->w] >= new->dist[curr.key] + adj->weight) {
-
 				if (new->dist[adj->w] > new->dist[curr.key] + adj->weight) {
 					Relaxation(new, curr.key, adj->w, adj->weight);
 					ItemPQ *insert = makeItem(new, adj->w);
 					addPQ(pq, *insert);
-
 			// if same distance just relax ie just update Pred
 				} else {
 					Relaxation(new, curr.key, adj->w, adj->weight);	
 				}
-
 			}
 			adj = adj->next;
 		}
 	}
-
 	//Set unreachable nodes to distance 0
 	int j = 0;
 	while (j < new->noNodes) {
@@ -71,7 +67,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 
 //show shortest paths from testDijkstra file
 void showShortestPaths(ShortestPaths paths) {
-int i = 0;
+	int i = 0;
 	printf("Node %d\n",paths.src);
 	printf("  Distance\n");
 	for (i = 0; i < paths.noNodes; i++) {
@@ -81,6 +77,7 @@ int i = 0;
 				printf("    %d : %d\n",i,paths.dist[i]);
 	}
 	printf("  Preds\n");
+	
 	for (i = 0; i < paths.noNodes; i++) {
 		int numPreds = 0;
 		int preds[paths.noNodes];
@@ -158,7 +155,6 @@ static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
 				curr->next->next = NULL;
 				}
 		}
-
 }
 //helper function to make item for PQ
 static ItemPQ *makeItem(ShortestPaths *s, Vertex v) {
