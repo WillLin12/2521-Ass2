@@ -15,7 +15,7 @@ typedef struct PQRep{
 
 static void MaxHeap(PQ pq, int index) {
 	int i = index;
-	int j = (i-1)/2;
+	int j = (i - 1)/2;
 	while (i > 0 && pq->item[j].value > pq->item[i].value) {
 		
 		ItemPQ tmp = pq->item[j];
@@ -23,15 +23,15 @@ static void MaxHeap(PQ pq, int index) {
 		pq->item[i] = tmp;
 		
 		i = j;
-		j = (i-1)/2;
+		j = (i - 1)/2;
 	}
 }
 
 static void MinHeap(PQ pq, int i, int size) {
-	while (2*i + 1 <= size -1) {
-		int j = 2*i + 1;
+	while (2 * i + 1 <= size - 1) {
+		int j = 2 * i + 1;
 		//choose the smaller child
-		if (j < size-1 && pq->item[j].value > pq->item[j+1].value) j++;
+		if (j < size - 1 && pq->item[j].value > pq->item[j + 1].value) j++;
 		//if child isnt smaller fix head heap
 		if (!(pq->item[i].value > pq->item[j].value)) {
 			break;
@@ -46,9 +46,9 @@ static void MinHeap(PQ pq, int i, int size) {
 
 /* Creates new priority queue, that can store items of type ItemPQ.
 */
-PQ newPQ(void){
+PQ newPQ(void) {
 	PQ queue = malloc(sizeof(PQRep));
-	queue->size =0;
+	queue->size = 0;
 	queue->item = NULL;
 	return queue;
 }
@@ -84,7 +84,7 @@ ItemPQ dequeuePQ(PQ pq){
 	assert (pq->size > 0);
 	
 	ItemPQ lowest = pq->item[0];
-	pq->item[0] = pq->item[pq->size-1];
+	pq->item[0] = pq->item[pq->size - 1];
 	pq->size--;
 	
 	MinHeap(pq, 0, pq->size);
