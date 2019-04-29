@@ -20,7 +20,7 @@
  */
 Dendrogram LanceWilliamsHAC(Graph g, int method) {
 //Function doesnt work floating point exception.
-    int N = numVertices(g);
+	int N = numVertices(g);
     
     //initialise NxN matrix
     double Dist[N][N];
@@ -61,23 +61,23 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
       dendA[i]->vertex = j;
     }
 
-  int h;
-  int smallest = INT_MAX;
-  int clusteri = 0;
-  int clusterj = 0;
-  for (h = 0; h < (N - 1); h ++) {
+	int h;
+  	int smallest = INT_MAX;
+  	int clusteri = 0;
+  	int clusterj = 0;
+  	for (h = 0; h < (N - 1); h ++) {
     //find closest clusters 
-    for (i = 0; i < N; i ++) {
-      for (j = 0; j < N; j ++) {
-        if (smallest > Dist[i][j]) {
-          smallest = Dist[i][j];
-          clusteri = i;
-          clusterj = j;
-        }
-      }
-    }
+    	for (i = 0; i < N; i ++) {
+      		for (j = 0; j < N; j ++) {
+        		if (smallest > Dist[i][j]) {
+          			smallest = Dist[i][j];
+          			clusteri = i;
+          			clusterj = j;
+        	}
+      	}
+   	}
     //merge closest clusters
-    Dendrogram new =  malloc(sizeof(DNode));
+	Dendrogram new =  malloc(sizeof(DNode));
     new->left->vertex = clusteri;
     new->right->vertex = clusterj;
     dendA[clusteri] = NULL;
@@ -87,30 +87,30 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
 
     // use Lance Williams formula for single link
     if (method == 1) {
-      int k;
-      for (k = 0; k < N; k ++) {
-        Dist[clusteri][k] = (1/2 * Dist[clusteri][k]) + (1/2 * Dist[clusterj][k]) - (1/2 * abs(Dist[clusteri][k] - Dist[clusterj][k]));
-        Dist[clusterj][k] = INT_MAX;
+    	int k;
+    	for (k = 0; k < N; k ++) {
+    		Dist[clusteri][k] = (1/2 * Dist[clusteri][k]) + (1/2 * Dist[clusterj][k]) - (1/2 * abs(Dist[clusteri][k] - Dist[clusterj][k]));
+    		Dist[clusterj][k] = INT_MAX;
       }
     }
     // use Lance Williams formula for complete link
     if (method == 2) {
-      int k;
-      for (k = 0; k < N; k ++) {
-        Dist[clusteri][k] = (1/2 * Dist[clusteri][k]) + (1/2 * Dist[clusterj][k]) + (1/2 * abs(Dist[clusteri][k] - Dist[clusterj][k]));
-        Dist[clusterj][k] = INT_MAX;
-      }
+    	int k;
+    	for (k = 0; k < N; k ++) {
+        	Dist[clusteri][k] = (1/2 * Dist[clusteri][k]) + (1/2 * Dist[clusterj][k]) + (1/2 * abs(Dist[clusteri][k] - Dist[clusterj][k]));
+        	Dist[clusterj][k] = INT_MAX;
+      	}
     }
 
 
   }
   //loop through dendA and find where the actual dendogram is and return it
   Dendrogram dend = NULL;
-  for (i = 0; i < N; i ++) {
-    if (dendA[i] != NULL) {
-      dend = dendA[i];
-    }
-  }
+	for (i = 0; i < N; i ++) {
+		if (dendA[i] != NULL) {
+    		dend = dendA[i];
+    	}
+  	}
 
     return dend;
 }
@@ -118,11 +118,11 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
 
 
 void freeDendrogram(Dendrogram d) {
-  if (d->left == NULL && d->right == NULL) {
-    free(d);
-  }
-  freeDendrogram(d->left);
-  freeDendrogram(d->right);
+	if (d->left == NULL && d->right == NULL) {
+		free(d);
+  	}
+  	freeDendrogram(d->left);
+  	freeDendrogram(d->right);
 }
 
 

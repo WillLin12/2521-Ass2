@@ -7,6 +7,7 @@
 
 static NodeValues *newNode(Graph g);
 
+//helper function to make a new node
 static NodeValues *newNode(Graph g) {
 	NodeValues *newNode = malloc(sizeof(NodeValues));
 	newNode->noNodes = numVerticies(g);
