@@ -1,4 +1,3 @@
-// Graph ADT interface for Ass2 (COMP2521)
 #include "CentralityMeasures.h"
 #include "Dijkstra.h"
 #include "PQ.h"
@@ -7,11 +6,10 @@
 
 static NodeValues *newNode(Graph g);
 
-//helper function to make a new node
 static NodeValues *newNode(Graph g) {
-	NodeValues *newNode = malloc(sizeof(NodeValues));
+	NodeValues *newNode = malloc(sizeof (NodeValues));
 	newNode->noNodes = numVerticies(g);
-	newNode->values = malloc(newNode->noNodes*sizeof (double));
+	newNode->values = malloc(newNode->noNodes*(sizeof (double)));
 	int i = 0;
 	while (i < newNode->noNodes) {
 		newNode->values[i] = 0;
@@ -55,7 +53,7 @@ NodeValues degreeCentrality(Graph g) {
 	int i = 0;
 	while (i < myNode->noNodes) {
 		AdjList myList = inIncident (g, i); //create two lists of Incidents
-		AdjList myListTwo = outIncident(g, i);
+		AdjList myListTwo = outIncident (g, i);
 		while (myList != NULL) {
 			myNode->values[i]++; //increment as above
 			myList = myList->next;
@@ -69,42 +67,38 @@ NodeValues degreeCentrality(Graph g) {
 	return *myNode;
 }
 
-NodeValues closenessCentrality(Graph g){	
-	NodeValues *myNode = newNode(g);
-	//total number of nodes on graph
-	double N = numVerticies(g);
-	
-	int currV = 0;
-	//check dijkstra for each array in graph
-	while (currV < N) {
-		ShortestPaths new = dijkstra(g, currV);
-		//calculate "n" number of reachable nodes by looping through dist array and adding when reachable ie != 0
-		int i = 0;
-		double n = 0;
-		while (i < N) {
-			if (new.dist[i] != 0) {
-				n ++;
-			}
-			i ++;
-		}
-		//calculate sum of all shortest paths 
-		int j = 0;
-		double sum = 0;
-		while (j < N) {
-			sum = sum + new.dist[j];
-			j ++;
-		}
-		//apply to formula
-		double formula = ((n)/(N-1)) * ((n)/(sum));
-		if (sum == 0) {
-			formula = 0;
-		}
-		//set values of all vertices to corresponding formula
-		myNode->values[currV] = formula;
+NodeValues closenessCentrality(Graph g) {	
+	NodeValues *myNode = newNode (g);
+	int i = 0;
 
-		currV ++;
+	while (i < myNode->noNodes) {
+		int n = 0;
+		AdjList myList = inIncident (g, i); //create two lists of incidents
+		AdjList myListTwo = outIncident (g, i);
+		
+		while (myList != NULL) {//increment n as no of nodes that can be reached
+			n++;
+			myList = myList->next;
+		}
+		
+		while (myListTwo != NULL) {
+			n++;
+			myListTwo = myListTwo->next;
+		}
+		
+		ShortestPaths Distance = dijkstra(g, i);
+		int shortestDistance = 0;
+		int j = 0;
+
+		while (j < Distance.noNodes) {	//increment shortest distance for every node
+			shortestDistance = shortestDistance + Distance.dist[j]; 
+			j++;
+		}
+		myNode->values[i] = ((n - 1)/(numVerticies(g) - 1)) * 
+		((n -1)/shortestDistance); //apply formula
+		i++;
 	}
-	return *myNode;	
+	return *myNode;
 }
 
 NodeValues betweennessCentrality(Graph g) { //warning does not work
@@ -131,18 +125,38 @@ NodeValues betweennessCentrality(Graph g) { //warning does not work
 	}
 	return *myNode;
 }
+NodeValues betweennessCentralityNormalised(Graph g) { 
+	NodeValues *myNode = newNode(g);
+	int i = 0;
 
-NodeValues betweennessCentralityNormalised(Graph g){ 
-	NodeValues temp = betweennessCentrality(g);
-	//for all values apply normalised formula
-	double N = temp.noNodes;
-	for (int i = 0; i < temp.noNodes; i ++) {
-		double old = temp.values[i];
-		temp.values[i] = (1/((N - 1)*(N - 2))) * old;
+	while (i < myNode->noNodes) {
+		int n = 0;
+		AdjList myList = inIncident (g, i); //create two lists of incidents
+		AdjList myListTwo = outIncident(g, i);
+		
+		while (myList != NULL) {//increment n as no of nodes that can be reached
+			n++;
+			myList = myList->next;
+		}
+		
+		while (myListTwo != NULL) {
+			n++;
+			myListTwo = myListTwo->next;
+		}
+		
+		ShortestPaths Distance = dijkstra(g, i);
+		int shortestDistance = 0;
+		int j = 0;
+
+		while (j < Distance.noNodes) { //increment shortest distance for every node
+			shortestDistance = shortestDistance + Distance.dist[j]; 
+			j++;
+		}			//apply formula
+		myNode->values[i] = (1/((n-1)*(n-2)) * betweennessCentrality(g).values[i]);
+		i++;
 	}
-	return temp;
+	return *myNode;
 }
-
 static int pathFinder(Graph g, int src, int last, 
 int currPred, int predListNo, ShortestPaths shortestPath, NodeValues *myNode) {
 	//if the path isnt the first vertice or last vertice in path
@@ -177,13 +191,12 @@ int currPred, int predListNo, ShortestPaths shortestPath, NodeValues *myNode) {
 	return 1;
 }
 
-void showNodeValues(NodeValues values){
+void showNodeValues(NodeValues values) {
 	for (int i = 0; i < values.noNodes; i++) {
 		printf("%d: %lf\n", i, values.values[i]);
 	}
 }
 
-void freeNodeValues(NodeValues values){
+void freeNodeValues(NodeValues values) {
 	free(values.values);
 }
-
