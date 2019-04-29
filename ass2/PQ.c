@@ -58,12 +58,15 @@ PQ newPQ(void){
 */
 void addPQ(PQ pq, ItemPQ item){
 	//check for value in array if its in the array update the value and fix the order
-	for (int i = 0; i < pq->size-1; i++) {
+	int i = 0;
+	while (i < pq->size - 1) {
 		if (pq->item[i].key == item.key) {
 			pq->item[i].value = item.value;
 			MaxHeap(pq, i);
 		}
+		i ++;
 	}
+
 	
 	//if its not in the array add it to the PQ and fix the order
 	pq->size++;
@@ -114,12 +117,17 @@ int PQEmpty(PQ pq){
 }
 
 void showPQ(PQ pq){
-	printf("Data in priority queue:\n");	
-	for (int i = 0; i < pq->size; i++) printf("%d ", pq->item[i].key);
+	int i = 0;
+	printf("Key in PQ:\n");	
+	for (i = 0; i < pq->size; i++) {
+		printf("%d ", pq->item[i].key);
+	}
 	printf("\n");
 	
-	printf("Priority of the data:\n");
-	for (int i = 0; i < pq->size; i++) printf("%d ", pq->item[i].value);
+	printf("Value in PQ\n");
+	for (i = 0; i < pq->size; i++) {
+		printf("%d ", pq->item[i].value);
+	}
 	printf("\n");
 
 }

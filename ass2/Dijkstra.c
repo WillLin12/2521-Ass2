@@ -8,6 +8,7 @@
 
 static void Relaxation(ShortestPaths *s, int v, int w, int weight);
 static ItemPQ *makeItem(ShortestPaths *s, Vertex v);
+static void freeLL(PredNode *L);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
 	//initialise shortestpath
@@ -22,9 +23,6 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 	while (i < new->noNodes) {
 		new->dist[i] = INT_MAX;
 		new->pred[i] = NULL;
-		//new->pred[i] = malloc(sizeof(PredNode));
-		//new->pred[i]->v = -1;
-		//new->pred[i]->next = NULL;
 		i ++;
 	}
 	//make a PQ and add src to PQ
@@ -32,14 +30,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 	PQ pq = newPQ();
 	ItemPQ *source = makeItem(new, v);
 	addPQ(pq, *source);
-/*
-	i = 0;
-	while (i < new->noNodes) {
-		ItemPQ *add = makeItem(new, i);
-		addPQ(pq, *add);
-		i ++;
-	}
-*/
+
 	// actual Dijkstras stuff
 	while (!PQEmpty(pq)){
 		//take smallest distance vertex from queue
@@ -48,35 +39,25 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		//loop through all vertices adjacent to curr adj = adjacent vertex
 		AdjList adj = outIncident(g, curr.key);
 		while (adj != NULL) {
-			//relax
-			// Next debug step: set a new if statement if node == 3 and trying to relaxation
+			//if distance of current Node + weight to w is less that distance w relax: update Distance and pred and add to queue 
 			if (new->dist[adj->w] >= new->dist[curr.key] + adj->weight) {
 
-				// IF (node == 3) print something / break in GDB
-				
-				//add adj to queue
 				if (new->dist[adj->w] > new->dist[curr.key] + adj->weight) {
 					Relaxation(new, curr.key, adj->w, adj->weight);
 					ItemPQ *insert = makeItem(new, adj->w);
 					addPQ(pq, *insert);
-					//ItemPQ *update = makeItem(new, adj->w);
-					//updatePQ(pq, *update);
 
+			// if same distance just relax ie just update Pred
 				} else {
 					Relaxation(new, curr.key, adj->w, adj->weight);	
 				}
-				//ItemPQ *update = makeItem(new, adj->w);
-				//updatePQ(pq, *update);
 
-				//update PQ
 			}
 			adj = adj->next;
 		}
 	}
 
-
-
-
+	//Set unreachable nodes to distance 0
 	int j = 0;
 	while (j < new->noNodes) {
 		if (new->dist[j] == INT_MAX) {
@@ -84,47 +65,73 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		}
 		j ++;
 	}
-	/*for (int i = 0; i < new->noNodes; i++) {
-		printf("Vertex %d: %d\n", i ,new->dist[i]);
-	} */
-	//set pred to NULL properly
 
-
-/*
-	i = 0;
-	while (i < new->noNodes) {
-		if (new->pred[i]->v == -1){
-			new->pred[i] = NULL;
-		}
-		i ++;
-	}
-*/
 	return *new;
-
-
 }
 
-//helper function to malloc prednode
-
+//show shortest paths from testDijkstra file
 void showShortestPaths(ShortestPaths paths) {
-
+int i = 0;
+	printf("Node %d\n",paths.src);
+	printf("  Distance\n");
+	for (i = 0; i < paths.noNodes; i++) {
+			if(i == paths.src)
+	    	printf("    %d : X\n",i);
+			else
+				printf("    %d : %d\n",i,paths.dist[i]);
+	}
+	printf("  Preds\n");
+	for (i = 0; i < paths.noNodes; i++) {
+		int numPreds = 0;
+		int preds[paths.noNodes];
+		printf("    %d : ",i);
+		PredNode *curr = paths.pred[i];
+		while (curr != NULL && numPreds < paths.noNodes) {
+			preds[numPreds++] = curr->v;
+			curr = curr->next;
+		}
+		
+		// Insertion sort
+		for (int j = 1; j < numPreds; j++) {
+			int temp = preds[j];
+			int k = j;
+			while (preds[k - 1] > temp && k > 0) {
+				preds[k] = preds[k - 1];
+				k--;
+			}
+			preds[k] = temp;
+		}
+		
+		for (int j = 0; j < numPreds; j++) {
+			printf("[%d]->", preds[j]);
+		}
+		printf("NULL\n");
+	}
 }
 
 
 void  freeShortestPaths(ShortestPaths paths) {
-
+	free(paths.dist);
+	int i;
+	for (i = 0; i < paths.noNodes; i ++){
+		freeLL(paths.pred[i]);
+	}
+	free(paths.pred);
 }
 
+//helper function to do relaxation
 static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
-	//if (s->dist[v] + weight < s->dist[w]) {
+	//if (s->dist[v] + weight < s->dist[w])
 		int old = s->dist[w];
 		s->dist[w] = s->dist[v] + weight;
 
+		// if pred is empty set pred to v
 		if (s->pred[w] == NULL) {
 			s->pred[w] = malloc(sizeof(PredNode));
 			s->pred[w]->v = v;
 			s->pred[w]->next = NULL;
 		}
+		//if a new shortest path is found free all of the old pred and make a new pred 
 		if (s->dist[w] < old) {
 			PredNode *curr = s->pred[w];				
 			while (curr != NULL) {
@@ -135,6 +142,7 @@ static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
 			s->pred[w] = malloc(sizeof(PredNode));
 			s->pred[w]->v = v;
 			s->pred[w]->next= NULL;
+		//if path of same distance as shortest is found append to pred
 		} else if (s->dist[w] == old && s->pred[w]->v != v) {
 				int test = -100;
 				PredNode *curr = s->pred[w];
@@ -151,39 +159,18 @@ static void Relaxation(ShortestPaths *s, int v, int w, int weight) {
 				}
 		}
 
-		/*if (s->dist[w] < old) {
-				if (s->pred[w] == NULL) {
-					s->pred[w] = malloc(sizeof(PredNode));
-					s->pred[w]->v = v;
-					s->pred[w]->next = NULL;	
-				} else {
-					PredNode *curr = s->pred[w];				
-					while (curr != NULL) {
-						PredNode *tmp = curr;
-						curr = curr->next;
-						free(tmp);
-					}
-				}
-
-		} else if (s->dist[w] == old) {
-			if (s->pred[w]== NULL) {
-				s->pred[w] = malloc(sizeof(PredNode));
-				s->pred[w]->v = v;
-				s->pred[w]->next = NULL;
-			} else {
-				PredNode *curr = s->pred[w];
-				while (curr->next != NULL) {
-					curr = curr->next;
-				}
-				curr->next = malloc(sizeof(PredNode));
-				curr->next->v = v;
-			}
-		}
-		*/
 }
+//helper function to make item for PQ
 static ItemPQ *makeItem(ShortestPaths *s, Vertex v) {
 	ItemPQ *item = malloc(sizeof(ItemPQ));
 	item->key = v;
 	item->value = s->dist[v];
 	return item;
+}
+
+static void freeLL(PredNode *L) {
+   if (L != NULL) {
+      freeLL(L->next);
+      free(L);
+   }
 }

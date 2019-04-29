@@ -42,13 +42,13 @@ int numVerticies(Graph g) {
 
 void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     assert(g != NULL);
-        //if edge isnt in graph
+        //if edge isnt in graph make a new edge
         if (!inLL(g->edges[src], dest)) {
             AdjList newNode = newAdjListNode(dest, weight);
             newNode->weight = weight;
             newNode->next = g->edges[src];
             g->edges[src] = newNode;
-        
+            //incremenet 
             g->nE++;
         }
 }
@@ -57,22 +57,25 @@ void  removeEdge(Graph g, Vertex src, Vertex dest) {
     assert(g != NULL);
 
 	if (inLL(g->edges[src], dest)) {   // edge e in graph
-      g->edges[src] = deleteLL(g->edges[src], dest);
-      g->nE--;
+      g->edges[src] = deleteLL(g->edges[src], dest); // remove edge
+      g->nE--; //decrese nE
    }
 }
 
 bool adjacent(Graph g, Vertex src, Vertex dest) {
     assert(g != NULL);
+    // if there is an edge return true else return false
     return inLL(g->edges[src], dest);
 }
 
 AdjList outIncident(Graph g, Vertex v) {
     assert(g != NULL);
+    //if no edge return null
     if (g->edges[v] == NULL) {
         return NULL;
     }
-    else /*(g->edges[v] != NULL)*/ {
+    //if edge return all adjacent
+    else  {
         AdjList currP = g->edges[v];
         return currP;
     }
@@ -86,9 +89,9 @@ AdjList inIncident(Graph g, Vertex v) {
     int i = 0;
     while (i < g->nV) { //loop through all edges
         if (inLL(g->edges[i], v)) { // if vertex is in an edge list
-            if (n == NULL) { // if empty
+            if (n == NULL) { // if empty make new head of List i
                 n = newAdjListNode(i, 0);
-            } else { //append
+            } else { //append to list 
                 AdjList curr = n;
                 while (curr->next != NULL) {
                     curr = curr->next;
@@ -100,7 +103,7 @@ AdjList inIncident(Graph g, Vertex v) {
     }
     return n; 
 }
-
+//function to show graph
 void  showGraph(Graph g) {
     assert(g != NULL);
     int i;
@@ -114,6 +117,7 @@ void  showGraph(Graph g) {
  
 }
 
+//function to free graph
 void  freeGraph(Graph g) {
     assert(g != NULL);
     int i;
@@ -124,6 +128,7 @@ void  freeGraph(Graph g) {
     free(g);
 }
 
+//helper function to make an AdjList node
 static AdjList newAdjListNode(Vertex v, int weight) {
     AdjList n = malloc(sizeof (adjListNode));
     n->w = v;
@@ -132,6 +137,8 @@ static AdjList newAdjListNode(Vertex v, int weight) {
     return n;
 }
 
+
+//All functions below are helper functions from lectures
 static void showLL(adjListNode *L) {
    if (L == NULL)
       putchar('\n');

@@ -19,7 +19,7 @@
  * 
  */
 Dendrogram LanceWilliamsHAC(Graph g, int method) {
-
+//Function doesnt work floating point exception.
     int N = numVertices(g);
     
     //initialise NxN matrix
@@ -54,7 +54,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
       }
     }
 
-    //printf ("%lf", Dist[N][N]);
+    // intialise Dendrogram array
     DNode **dendA = malloc(sizeof(DNode) * N);
     int j;
     for (j = 0; j < N; j ++) {
@@ -66,7 +66,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
   int clusteri = 0;
   int clusterj = 0;
   for (h = 0; h < (N - 1); h ++) {
-    //find closest clusters
+    //find closest clusters 
     for (i = 0; i < N; i ++) {
       for (j = 0; j < N; j ++) {
         if (smallest > Dist[i][j]) {
@@ -76,6 +76,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         }
       }
     }
+    //merge closest clusters
     Dendrogram new =  malloc(sizeof(DNode));
     new->left->vertex = clusteri;
     new->right->vertex = clusterj;
@@ -83,6 +84,8 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     dendA[clusterj] = NULL;
     dendA[clusteri] = new;
 
+
+    // use Lance Williams formula for single link
     if (method == 1) {
       int k;
       for (k = 0; k < N; k ++) {
@@ -90,6 +93,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         Dist[clusterj][k] = INT_MAX;
       }
     }
+    // use Lance Williams formula for complete link
     if (method == 2) {
       int k;
       for (k = 0; k < N; k ++) {
@@ -100,6 +104,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
 
 
   }
+  //loop through dendA and find where the actual dendogram is and return it
   Dendrogram dend = NULL;
   for (i = 0; i < N; i ++) {
     if (dendA[i] != NULL) {
